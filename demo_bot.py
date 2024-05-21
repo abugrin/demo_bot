@@ -63,7 +63,7 @@ def my_bot(update: bot_pool.Update):
             print(f"Art response: {response}")
             send_message(f"Отправлен запрос на генерацию изображения. Id запроса: {response['id']}", update)
             c.acquire()
-            art_queue.update({f'{response['id']}': update})
+            art_queue.update({f"{response['id']}": update})
             c.notify()
         elif message == "/art_no":
             send_message(f"Генерация изображения отменена", update)
