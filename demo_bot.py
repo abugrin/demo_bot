@@ -22,10 +22,6 @@ def my_bot(update: bot_pool.Update):
         send_inline_keyboard(f'Сгенерировать изображение по запросу: {update.text}', [button_art_yes, button_art_no], update)
         art_requests.pop(f'{update.from_m.from_id}', None)
     elif f'{update.from_m.from_id}' in translate_requests:
-        # button_art_yes = {'text': 'Да', 'callback_data': {'cmd': '/art_yes', 'text': update.text}}
-        # button_art_no = {'text': 'Нет', 'callback_data': {'cmd': '/art_no'}}
-        # send_inline_keyboard(f'Сгенерировать изображение по запросу: {update.text}', [button_art_yes, button_art_no], update)
-        # print(f"Translate: {update.text}")
         response = send_translate_request(update.text)
         text = response['translations'][0]['text']
         send_message(f"Перевод:\n```{text}```", update)
