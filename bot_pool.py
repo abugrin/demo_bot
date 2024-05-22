@@ -130,7 +130,7 @@ def start(cb_function):
     while True:
         # Update request body with offset as last_update_id + 1
         request_body = {'limit': 100, 'offset': last_update_id + 1}
-        print(f"Request Body: {request_body}")
+        # print(f"Request Body: {request_body}")
 
         # Send request to Yandex 360 service
         response = post(url, json=request_body, headers=headers)

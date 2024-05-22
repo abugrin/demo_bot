@@ -38,7 +38,6 @@ def send_art_request(text):
     }
 
     response = post(path, json=body, headers=headers)
-    print(f"Art response: {response.json()}")
     return response.json()
 
 

@@ -8,7 +8,7 @@ from tracker_api import create_ticket
 
 
 def my_bot(update: bot_pool.Update):
-    print(f"Received Update: {update.update_id} text: {update.text}")
+    # print(f"Received Update: {update.update_id} text: {update.text}")
     global art_queue
 
     if f'{update.from_m.from_id}' in pass_requests:
@@ -61,10 +61,16 @@ def my_bot(update: bot_pool.Update):
         elif message == "/art_yes":
             response = send_art_request(update.callback_data['text'])
             print(f"Art response: {response}")
-            send_message(f"Отправлен запрос на генерацию изображения. Id запроса: {response['id']}", update)
-            c.acquire()
-            art_queue.update({f"{response['id']}": update})
-            c.notify()
+            try:
+                send_message(f"Отправлен запрос на генерацию изображения. Id запроса: {response['id']}", update)
+                c.acquire()
+                art_queue.update({f"{response['id']}": update})
+                # c.notify()
+                c.release()
+            except KeyError:
+                send_message(f"Ошибка: {response['error']}", update)
+                send_menu(update)
+
         elif message == "/art_no":
             send_message(f"Генерация изображения отменена", update)
             send_menu(update)
@@ -80,9 +86,9 @@ def art_thread():
     global art_queue
 
     while True:
-        print("Art queue size -->", len(art_queue))
+        print("Art queue size: ", len(art_queue))
         for art_request in art_queue:
-            print(f"Working on art request: {art_request}")
+            # print(f"Working on art request: {art_request}")
             response = get_art_response(art_request)
             # print(f"Art response: {response}")
             if response['done']:
@@ -91,11 +97,13 @@ def art_thread():
                 send_menu(art_queue[art_request])
                 c.acquire()
                 art_queue.pop(art_request, None)
-                c.notify()
+                # c.notify()
+                c.release()
+                break
 
             else:
                 send_message("Генерируется...", art_queue[art_request])
-
+        # print("Sleeping")
         sleep(10)
 
 
