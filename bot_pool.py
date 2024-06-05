@@ -29,7 +29,8 @@ class From:
 
 
 class Update:
-    def __init__(self, chat: Chat, from_m: From, message_id, text, timestamp, update_id, reply_to_message=None, callback_data=None):
+    def __init__(self, chat: Chat, from_m: From, message_id, text, timestamp,
+                 update_id, reply_to_message=None, callback_data=None):
         self.chat = chat
         self.from_m = from_m
         self.message_id = message_id
@@ -98,7 +99,7 @@ def create_update(update):
     return update
 
 
-def start(cb_function):
+def start(cb_function, **kwargs):
     """
     This function starts the bot and continuously fetches updates from the Yandex 360 service.
     It uses a callback function to process each update.
@@ -142,7 +143,7 @@ def start(cb_function):
                 for upd in updates:
                     # Create Update object and call the callback function
                     update = create_update(upd)
-                    cb_function(update)
+                    cb_function(update, **kwargs)
             # else:
             #     print("No new updates")
         else:
